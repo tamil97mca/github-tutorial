@@ -386,4 +386,324 @@ git pull origin main
 | ---- | ---------------- | ----------------------------------- |
 | `-u` | `--set-upstream` | Links local branch to remote branch |
 
+
+---
+
+### ✅ 1. `git stash` – *Temporarily Save Uncommitted Work*
+
+---
+
+#### 🔍 What it Does:
+
+`git stash` temporarily shelves (or stashes) changes you've made to your working directory so you can work on something else, and then come back and re-apply them later.
+
+#### 📘 Syntax:
+
+```bash
+git stash         # Save tracked files
+git stash -u      # Save tracked + untracked files
+git stash pop     # Apply last stash and remove it
+git stash apply   # Apply last stash but keep it
+git stash list    # View saved stashes
+git stash drop    # Delete a stash
+```
+
+#### 🌐 Real-World Use Case:
+
+You're working on a feature but are asked to urgently fix a bug in another branch:
+
+```bash
+git stash                 # Save your current progress
+git checkout bugfix-branch
+# fix the bug
+git commit -am "Bug fix"
+git checkout feature-branch
+git stash pop             # Resume where you left off
+```
+
+---
+
+### ✅ 2. `git rebase` – *Rewriting History, Making Linear Commit Trees*
+
+#### 🔍 What it Does:
+
+`git rebase` moves or replays commits from one branch onto another. It’s often used to create a **cleaner project history**.
+
+#### 📘 Syntax:
+
+```bash
+git checkout feature-branch
+git rebase main             # Reapply feature commits on top of main
+git rebase -i HEAD~3        # Interactive rebase last 3 commits
+```
+
+#### 🌐 Real-World Use Case:
+
+Suppose your `feature-branch` is behind `main` but you want to update it before making a pull request:
+
+```bash
+git checkout feature-branch
+git rebase main
+```
+
+This will replay your changes on top of the latest main, giving a linear history (cleaner than merge commits).
+
+---
+
+### ✅ 3. `git cherry-pick` – *Apply Specific Commits*
+
+#### 🔍 What it Does:
+
+`git cherry-pick` allows you to **pick a single commit from another branch** and apply it to your current branch.
+
+#### 📘 Syntax:
+
+```bash
+git cherry-pick <commit-hash>
+```
+
+#### 🌐 Real-World Use Case:
+
+You fixed a typo in `main`, but want that same fix in `release` branch:
+
+```bash
+git checkout release
+git cherry-pick 7a8b9c3       # Commit hash from main
+```
+
+Now that specific commit exists in `release` too, without merging full history.
+
+---
+
+### ✅ 4. `git tag` – *Marking Specific Points in History (usually releases)*
+
+#### 🔍 What it Does:
+
+Tags are used to **mark release points**, like `v1.0`, in your repository.
+
+#### 📘 Syntax:
+
+```bash
+git tag                      # List tags
+git tag v1.0                 # Create lightweight tag
+git tag -a v1.1 -m "Release v1.1"   # Annotated tag
+git push origin v1.1         # Push specific tag
+git push origin --tags       # Push all tags
+```
+
+#### 🌐 Real-World Use Case:
+
+You’ve finished a major release:
+
+```bash
+git tag -a v1.0 -m "First stable release"
+git push origin v1.0
+```
+
+Useful for version control and integrating with CI/CD tools (like GitHub Releases or GitHub Actions).
+
+---
+
+### ✅ 5. `git blame file.txt` – *Track Who Changed Each Line*
+
+#### 🔍 What it Does:
+
+`git blame` shows **who last modified each line of a file**, along with the commit hash and timestamp.
+
+#### 📘 Syntax:
+
+```bash
+git blame file.txt
+git blame -L 10,20 file.txt      # Show blame only for lines 10-20
+```
+
+#### 🌐 Real-World Use Case:
+
+You're debugging a bug in `file.txt` and want to see who wrote line 42:
+
+```bash
+git blame file.txt
+```
+
+You'll see the author, date, and commit ID, helping you track down the reason for that line's change.
+
+---
+
+### 🧠 Summary Table:
+
+| Command           | Use Case                                      | Helpful Flags        |
+| ----------------- | --------------------------------------------- | -------------------- |
+| `git stash`       | Save uncommitted changes temporarily          | `-u`, `pop`, `apply` |
+| `git rebase`      | Clean up or linearize history                 | `-i`, `--onto`       |
+| `git cherry-pick` | Apply a specific commit to another branch     |                      |
+| `git tag`         | Mark versions/releases                        | `-a`, `-m`, `--tags` |
+| `git blame`       | Find who made specific line changes in a file | `-L`                 |
+
+---
+
+Perfect! Let’s walk through a **real-time GitHub scenario** combining:
+
+✅ `git stash`
+✅ `git rebase`
+✅ `git cherry-pick`
+✅ `git tag`
+✅ `git blame`
+
+We'll simulate a situation in a **team-based GitHub project**.
+
+---
+
+## 🧪 Project Scenario
+
+Imagine you're working on a project with the following branches:
+
+* `main`: Production-ready code
+* `feature/login-ui`: You're developing a new login UI
+* `bugfix/header`: Another dev fixed a header bug
+* `release`: Branch used for releasing stable versions
+
+You are in the `feature/login-ui` branch when:
+
+---
+
+## 🔧 1. `git stash` – Save Your Ongoing Work
+
+### 💬 Problem:
+
+You're halfway done with your new login UI, but a critical bug in the `main` header needs fixing urgently.
+
+### ✅ What You Do:
+
+```bash
+# You're on: feature/login-ui
+git stash                     # Save uncommitted changes
+
+git checkout main
+git checkout -b hotfix/header-font
+# Fix the bug in the header
+git commit -am "Fix: Header font size"
+git checkout feature/login-ui
+git stash pop                 # Resume login UI work
+```
+
+🔄 Your **work is safely restored** and the urgent fix was handled.
+
+---
+
+## 🎯 2. `git cherry-pick` – Reuse Specific Fix
+
+### 💬 Problem:
+
+Now your team also wants that header font fix in the `release` branch, without merging the whole branch.
+
+### ✅ What You Do:
+
+```bash
+git checkout release
+git cherry-pick <commit-hash>
+```
+
+> Replace `<commit-hash>` with the commit ID of `"Fix: Header font size"` from `hotfix/header-font`.
+
+✅ Only **that single fix** is applied to `release`, no unrelated changes.
+
+---
+
+## 🧹 3. `git rebase` – Clean Up History
+
+### 💬 Problem:
+
+You finished the login UI work in `feature/login-ui`, but it's behind `main`. You want a clean, linear history for pull request.
+
+### ✅ What You Do:
+
+```bash
+git checkout feature/login-ui
+git rebase main
+```
+
+This replays your feature commits on top of the latest `main`, creating a **clean PR history**.
+
+If conflicts occur, fix them and:
+
+```bash
+git add .
+git rebase --continue
+```
+
+---
+
+## 📌 4. `git tag` – Mark a Release
+
+### 💬 Problem:
+
+You've merged all fixes and features into `main` and now it's ready for release.
+
+### ✅ What You Do:
+
+```bash
+git checkout main
+git pull
+git tag -a v1.0 -m "🎉 Release version 1.0"
+git push origin v1.0
+```
+
+✅ This helps GitHub and CI/CD systems **track releases**, link changelogs, and rollback easily.
+
+---
+
+## 🕵️ 5. `git blame` – Find Who Broke Something
+
+### 💬 Problem:
+
+Login isn't working. You suspect something went wrong in `auth.service.ts`.
+
+### ✅ What You Do:
+
+```bash
+git blame src/services/auth.service.ts
+```
+
+Sample output:
+
+```
+a1b2c3d4  (Alice 2024-06-02 12:34:56)   return this.login(email, password);
+e5f6g7h8  (You   2024-06-05 14:00:02)   console.log("Login called");
+```
+
+✅ You now know **who wrote each line**, and when. You find Alice changed a key function — time to ask her why!
+
+---
+
+## 🔁 Summary Workflow Map
+
+```bash
+# While on feature branch, get urgent task
+git stash
+
+# Switch, fix bug, commit
+git checkout -b hotfix/header-font
+# Fix
+git commit -am "Header fix"
+
+# Cherry-pick fix to release
+git checkout release
+git cherry-pick <fix-commit>
+
+# Go back, resume work
+git checkout feature/login-ui
+git stash pop
+
+# After finishing, rebase for clean history
+git rebase main
+
+# Tag final release
+git checkout main
+git tag -a v1.0 -m "Release v1.0"
+git push origin v1.0
+
+# If an issue occurs
+git blame file.txt
+```
+
 ---
