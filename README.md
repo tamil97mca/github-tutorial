@@ -251,3 +251,139 @@ git blame file.txt  # Shows who changed what and when
 
 ---
 
+The `-M` flag in the `git branch -M main` command stands for **"move/rename branch"**, and it **forces** the rename even if the new branch name already exists.
+---
+### 🔍 Full Explanation:
+
+```bash
+git branch -M main
+```
+
+* `git branch`: Git command for managing branches.
+* `-M`: Stands for "Move" or "rename forcefully".
+* `main`: The new name you want to give to the current branch (commonly renaming from `master` to `main`).
+
+---
+
+### 🛠️ Use Case Example
+
+You initialized a repo, and Git created a default `master` branch. To align with modern standards, you rename it:
+
+```bash
+git branch -M main
+```
+
+This:
+
+* Renames `master` → `main`
+* Replaces any existing `main` branch if it already exists (forceful)
+
+If you **don’t want to force** the rename (e.g., only rename if the target doesn’t exist), use `-m` (lowercase):
+
+```bash
+git branch -m main
+```
+
+---
+
+### ✅ Summary Table
+
+| Flag | Meaning     | Behavior                             |
+| ---- | ----------- | ------------------------------------ |
+| `-m` | move/rename | Safe rename (fails if `main` exists) |
+| `-M` | force move  | Renames even if `main` exists        |
+
+---
+
+### 🔍 `-m` in `git commit -m "Initial commit"` Explained
+
+The `-m` flag in Git stands for **"message"**.
+
+---
+
+### ✅ Full Breakdown:
+
+```bash
+git commit -m "Initial commit"
+```
+
+* `git commit`: Creates a new commit from the staged changes.
+* `-m`: Tells Git that you're **providing the commit message inline**.
+* `"Initial commit"`: The **message** describing what this commit does.
+
+---
+
+### 🔁 Without `-m` (Alternative)
+
+If you **omit** `-m`, Git opens the **default text editor** (like Vim or VSCode) to let you write a multi-line commit message manually:
+
+```bash
+git commit
+```
+
+---
+
+### 📝 Best Practices for `-m`:
+
+* Always use meaningful messages:
+
+  * ✅ `git commit -m "Fix login bug on Safari"`
+  * ❌ `git commit -m "stuff"`
+
+---
+
+### ✅ Summary Table
+
+| Flag | Meaning        | Usage Example                       |
+| ---- | -------------- | ----------------------------------- |
+| `-m` | Inline message | `git commit -m "Add login feature"` |
+
+Would you like me to append this explanation to your PDF?
+
+---
+
+### 🔍 `-u` in `git push -u origin main` Explained
+
+The `-u` flag stands for **`--set-upstream`** — it **links** your local branch with the remote branch.
+
+---
+
+### ✅ Full Breakdown:
+
+```bash
+git push -u origin main
+```
+
+* `git push`: Uploads your commits to a remote repository.
+* `origin`: The remote name (usually GitHub).
+* `main`: The branch you're pushing.
+* `-u`: Sets the **upstream tracking relationship** between your local `main` and the remote `origin/main`.
+
+---
+
+### 🔁 Why Use `-u`?
+
+After you use `-u` once, future pushes and pulls become simpler:
+
+```bash
+# After the first push with -u
+git push    # Automatically knows to push to origin/main
+git pull    # Automatically pulls from origin/main
+```
+
+Without `-u`, you'd always have to do:
+
+```bash
+git push origin main
+git pull origin main
+```
+
+---
+
+### ✅ Summary Table
+
+| Flag | Full Form        | Meaning                             |
+| ---- | ---------------- | ----------------------------------- |
+| `-u` | `--set-upstream` | Links local branch to remote branch |
+
+---
