@@ -707,3 +707,137 @@ git blame file.txt
 ```
 
 ---
+
+Great! Let’s simulate the **entire GitHub workflow** on your **local system**, step-by-step. You’ll:
+
+✅ Set up a Git repo
+✅ Create branches
+✅ Use `stash`, `cherry-pick`, `rebase`, `tag`, and `blame`
+
+---
+
+## 🛠️ STEP 1: Initialize the Repository
+
+```bash
+mkdir git-advanced-demo && cd git-advanced-demo
+git init
+echo "# Git Advanced Demo" > README.md
+git add README.md
+git commit -m "Initial commit"
+git checkout -b main
+```
+
+---
+
+## 🧪 STEP 2: Create a Feature Branch (Login UI)
+
+```bash
+git checkout -b feature/login-ui
+mkdir src && echo "// Login page" > src/login.js
+git add .
+git commit -m "Start login page"
+```
+
+Now, **simulate uncommitted work**:
+
+```bash
+echo "// Unfinished login code" >> src/login.js
+```
+
+---
+
+## ⚠️ STEP 3: Simulate Emergency Fix → Use `stash`
+
+You’re told to fix a header issue ASAP.
+
+```bash
+git stash                  # Save your unfinished work
+git checkout -b bugfix/header
+echo "// Header bug fixed" > src/header.js
+git add .
+git commit -m "Fix: Header rendering issue"
+```
+
+---
+
+## 🚀 STEP 4: Use `cherry-pick` to Add Fix to Release
+
+```bash
+git checkout -b release main
+git cherry-pick <BUGFIX_COMMIT_HASH>
+```
+
+> 💡 To get the hash:
+> `git log --oneline --graph --all`
+> Copy the commit for "Fix: Header rendering issue"
+
+---
+
+## 🔁 STEP 5: Resume Work with `stash pop`
+
+```bash
+git checkout feature/login-ui
+git stash pop
+```
+
+✅ Your unfinished work is back!
+
+---
+
+## 📚 STEP 6: Finish Feature & Rebase on Main
+
+```bash
+git add .
+git commit -m "Finish login UI"
+git checkout main
+echo "// Main branch updated" > src/utils.js
+git add . && git commit -m "Main branch utils update"
+
+git checkout feature/login-ui
+git rebase main
+```
+
+If conflict happens:
+
+```bash
+# Fix file manually
+git add .
+git rebase --continue
+```
+
+---
+
+## 🏷️ STEP 7: Tag the Release
+
+```bash
+git checkout main
+git merge feature/login-ui
+git tag -a v1.0 -m "🎉 Release version 1.0 with Login and Header fix"
+git log --oneline --decorate --graph
+```
+
+✅ You’ve tagged a release point.
+
+---
+
+## 🔍 STEP 8: Use `git blame`
+
+Let's say something broke in `login.js`. Run:
+
+```bash
+git blame src/login.js
+```
+
+You’ll see who wrote each line with date, time, and commit hash.
+
+---
+
+## 🎉 All Done! Your Workflow Looked Like:
+
+```
+main ──────┬──────────────┬─── Merged to main
+           │              │
+     feature/login-ui   bugfix/header ──── cherry-pick ──► release
+```
+
+---
